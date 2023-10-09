@@ -1,0 +1,48 @@
+给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序。
+
+Codes:
+class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        for i in range(len(nums)):
+            nums[i] = nums[i]*nums[i]
+        print(nums)
+        for k in range(1, len(nums)):
+            for j in range(len(nums)-k):
+                if nums[j] > nums[j+1]:
+                    temp = nums[j]
+                    nums[j] = nums[j+1]
+                    nums[j+1] = temp
+                else:
+                    pass
+        return nums
+
+
+answer:
+
+（版本一）双指针法
+class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        l, r, i = 0, len(nums)-1, len(nums)-1
+        res = [float('inf')] * len(nums) # 需要提前定义列表，存放结果
+        while l <= r:
+            if nums[l] ** 2 < nums[r] ** 2: # 左右边界进行对比，找出最大值
+                res[i] = nums[r] ** 2
+                r -= 1 # 右指针往左移动
+            else:
+                res[i] = nums[l] ** 2
+                l += 1 # 左指针往右移动
+            i -= 1 # 存放结果的指针需要往前平移一位
+        return res
+
+（版本二）暴力排序法
+class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        for i in range(len(nums)):
+            nums[i] *= nums[i]
+        nums.sort()
+        return nums
+
+（版本三）暴力排序法+列表推导法
+class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        return sorted(x*x for x in nums)
