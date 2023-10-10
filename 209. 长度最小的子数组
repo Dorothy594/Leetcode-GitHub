@@ -1,0 +1,66 @@
+给定一个含有 n 个正整数的数组和一个正整数 target 。
+找出该数组中满足其总和大于等于 target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0 。
+
+ Code:
+ class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        sum = 0
+        for i in nums:
+            if i >= target:
+                return 1
+            else:
+                sum = sum + i
+
+        if sum < target:
+            return 0
+        elif sum == target:
+            return len(nums)
+        else:
+            for j in range(2, len(nums)):
+                result = 0
+                for k in range(j):
+                    for m in range(len(nums)-j):
+                        result = result + nums[m+k]
+                    if result >= target:
+                        return j
+                    else:
+                        pass
+
+
+Answer:
+（版本一）滑动窗口法
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        l = len(nums)
+        left = 0
+        right = 0
+        min_len = float('inf')
+        cur_sum = 0 #当前的累加值
+        
+        while right < l:
+            cur_sum += nums[right]
+            
+            while cur_sum >= s: # 当前累加值大于目标值
+                min_len = min(min_len, right - left + 1)
+                cur_sum -= nums[left]
+                left += 1
+            
+            right += 1
+        
+        return min_len if min_len != float('inf') else 0
+
+（版本二）暴力法
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        l = len(nums)
+        min_len = float('inf')
+        
+        for i in range(l):
+            cur_sum = 0
+            for j in range(i, l):
+                cur_sum += nums[j]
+                if cur_sum >= s:
+                    min_len = min(min_len, j - i + 1)
+                    break
+        
+        return min_len if min_len != float('inf') else 0
